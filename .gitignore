@@ -1,0 +1,11 @@
+bin/
+build/
+gradle/
+.settings/
+.idea
+.gradle
+.classpath
+.project
+.springBeans
+/.apt_generated/
+.factorypath
