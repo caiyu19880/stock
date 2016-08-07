@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.policy.stock.mapper.FinaceDataMapper">
+	<insert id="save" parameterType="FinaceData">
+		insert into
+		tbl_stock_finace_data (stockcode, year,indexname,indexvalue,type)
+		values
+		(#{stockCode}, #{year}, #{indexName}, #{indexValue}, #{type})
+	</insert>
+
+	<!-- 批量插入生成的兑换码 -->
+	<insert id="saveAll" parameterType="java.util.List">
+		insert into
+		tbl_stock_finace_data (stockcode,
+		year,indexname,indexvalue,type)
+		values
+
+		<foreach collection="list" item="data" index="index"
+			separator=",">
+			(#{data.stockCode}, #{data.year},
+			#{data.indexName}, #{data.indexValue}, #{data.type})
+		</foreach>
+	</insert>
+
+</mapper>
