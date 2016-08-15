@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.policy.stock.mapper.StockCoreDataMapper">
+	<insert id="save" parameterType="StockCoreData">
+		INSERT INTO tbl_stock_core_data
+		(
+		stock_code,
+		update_date,
+		sy,
+		pe_d,
+		jzc,
+		sjl,
+		zsr,
+		zsrtb,
+		jlr,
+		jlrtb,
+		mll,
+		jll,
+		roe,
+		fzl,
+		zgb,
+		zz,
+		ltg,
+		lz,
+		mgwfplr,
+		in_stock_date
+		)
+		values
+		(#{data.stockCode},
+		#{data.updateDate}, #{data.sy},
+		#{data.peD}, #{data.jzc}, #{data.sjl}, #{data.zsr}, #{data.zsrtb},
+		#{data.jlr}, #{data.jlrtb}, #{data.mll}, #{data.jll}, #{data.roe},
+		#{data.fzl}, #{data.zgb},#{data.zz},#{data.ltg},
+		#{data.lz},
+		#{data.mgwfplr}, #{data.inStockDate})
+	</insert>
+
+	<!-- 批量插入生成的兑换码 -->
+	<insert id="saveAll" parameterType="java.util.List">
+		INSERT INTO tbl_stock_core_data (
+		stock_code,
+		update_date,
+		sy,
+		pe_d,
+		jzc,
+		sjl,
+		zsr,
+		zsrtb,
+		jlr,
+		jlrtb,
+		mll,
+		jll,
+		roe,
+		fzl,
+		zgb,
+		zz,
+		ltg,
+		lz,
+		mgwfplr,
+		in_stock_date
+		)
+		values
+		<foreach collection="list" item="data" index="index"
+			separator=",">
+			(#{data.stockCode},
+			#{data.updateDate}, #{data.sy},
+			#{data.peD}, #{data.jzc}, #{data.sjl}, #{data.zsr}, #{data.zsrtb},
+			#{data.jlr}, #{data.jlrtb}, #{data.mll}, #{data.jll}, #{data.roe},
+			#{data.fzl}, #{data.zgb},#{data.zz},#{data.ltg},
+			#{data.lz},
+			#{data.mgwfplr}, #{data.inStockDate})
+		</foreach>
+	</insert>
+
+</mapper>

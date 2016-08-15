@@ -21,13 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.policy.stock.runner.finacedata.FinaceDataStore;
 import com.policy.stock.runner.finacedata.FinaceParseRunner;
 import com.policy.stock.runner.finacedata.FinaceStoreRunner;
+import com.policy.stock.runner.stockcoredata.StockCoreDataParseRunner;
+import com.policy.stock.runner.stockcoredata.StockCoreDataStore;
 import com.policy.stock.service.IFinaceDataService;
+import com.policy.stock.service.IStockCoreDataService;
 
 @RestController
 public class MainController {
     
     @Autowired
     private IFinaceDataService finaceDataService;
+    
+    @Autowired
+    private IStockCoreDataService stockCoreDataService;
     
     @RequestMapping(value = "/stock/trigger")
     public void trigger(HttpServletRequest request, HttpServletResponse response) {
@@ -38,6 +44,19 @@ public class MainController {
     	FinaceStoreRunner consumer;
     	for(int i =0 ;i <1;i++){
     		producer = new FinaceParseRunner(finaceDataService);
+    		producer.start();
+    	}
+    	
+    }
+    
+    @RequestMapping(value = "/stock/coredata/trigger")
+    public void coreData(HttpServletRequest request, HttpServletResponse response) {
+    	String basepath = request.getSession().getServletContext().getRealPath("/");
+    	List<String> codeList = this.getAllListedCode(basepath);
+    	StockCoreDataStore.getCodes().addAll(codeList);
+    	StockCoreDataParseRunner producer;
+    	for(int i =0 ;i < 5;i++){
+    		producer = new StockCoreDataParseRunner(stockCoreDataService);
     		producer.start();
     	}
     	
