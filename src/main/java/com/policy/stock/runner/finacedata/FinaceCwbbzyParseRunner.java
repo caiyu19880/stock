@@ -17,15 +17,15 @@ import com.policy.stock.model.FinaceData;
 import com.policy.stock.service.IFinaceDataService;
 import com.policy.stock.utils.StringUtil;
 
-public class FinaceParseRunner extends Thread {
+public class FinaceCwbbzyParseRunner extends Thread {
 
-	private String baseUrl = "http://quotes.money.163.com/f10/zycwzb_{stockCode},year.html";
+	private String baseUrl = "http://quotes.money.163.com/f10/cwbbzy_{stockCode}.html?type=year";
 
 	private String stockCode;
 	
 	private IFinaceDataService finaceDataService;
 
-	public FinaceParseRunner(IFinaceDataService service) {
+	public FinaceCwbbzyParseRunner(IFinaceDataService service) {
 		finaceDataService = service;
 	}
 
@@ -55,7 +55,8 @@ public class FinaceParseRunner extends Thread {
 			TableTag table = null;
 			String tablecss = null;
 			FinaceData data = null;
-			List<String> mainFinaceName = null;
+			List<String> indexFinaceNames = null;
+			String indexType = null;
 			for (int i = 0; i < nodeList.size(); i++) {
 				table = (TableTag) nodeList.elementAt(i);
 				if (null == table) {
@@ -65,26 +66,34 @@ public class FinaceParseRunner extends Thread {
 				if (StringUtils.isEmpty(tablecss) || !tablecss.contains("table_bg001")) {
 					continue;
 				}
-				// 主要财务指标title
+				// 资产负债表title
 				if (tablecss.equals("table_bg001 border_box limit_sale")) {
-					mainFinaceName = new ArrayList<String>();
+				    indexFinaceNames = new ArrayList<String>();
 					for (TableRow row : table.getRows()) {
-						mainFinaceName.add(StringUtil.replaceBlank(row.toPlainTextString()));
+					    indexFinaceNames.add(StringUtil.replaceBlank(row.toPlainTextString()));
 					}
 					continue;
 				}
 
-				// 主要财务指标content
+				// 资产负债表content
 				if (tablecss.equals("table_bg001 border_box limit_sale scr_table")) {
 					TableRow tempRow = null;
 					TableColumn tempTd = null;
+					String rowCss = null;
 					for (int j = 1; j < table.getRowCount(); j++) {
 						tempRow = table.getRows()[j];
+						rowCss = tempRow.getAttribute("class");
+						
+						if("upbg".equals(rowCss) || tempRow.getChildCount() == 1){
+						    indexType = indexFinaceNames.get(j);
+						    continue;
+						}
+						
 						for (int k = 0; k < 6; k++) {
 							try {
 								data = new FinaceData();
-								data.setIndexName(mainFinaceName.get(j));
-								data.setType("主要财务指标");
+								data.setIndexName(indexFinaceNames.get(j));
+								data.setType(indexType);
 								data.setStockCode(codeStr);
 								tempTd = tempRow.getColumns()[k];
 								data.setIndexValue(tempTd.toPlainTextString());
@@ -96,37 +105,9 @@ public class FinaceParseRunner extends Thread {
 						}
 						data = null;
 					}
-					mainFinaceName = null;
+					indexFinaceNames = null;
 					continue;
 				}
-
-				// table_bg001 border_box fund_analys// 盈利能力
-				// table_bg001 border_box fund_analys// 偿还能力
-				// table_bg001 border_box fund_analys// 成长能力
-				// table_bg001 border_box fund_analys// 营运能力
-				// 四个数据一致
-				if (tablecss.equals("table_bg001 border_box fund_analys")) {
-					TableRow tempRow = null;
-					for (int j = 1; j < table.getRowCount(); j++) {
-						tempRow = table.getRows()[j];
-						for (int k = 1; k < 7; k++) {
-							try {
-								data = new FinaceData();
-								data.setIndexName(tempRow.getColumns()[0].toPlainTextString());
-								data.setType(this.caculateTitle(i));
-								data.setStockCode(codeStr);
-								data.setIndexValue(tempRow.getColumns()[k].toPlainTextString());
-								data.setYear(this.caculateYear(k-1));
-								finaceDatas.add(data);
-							} catch (Exception e) {
-								System.out.println("ParserException : code :  " + codeStr + " error is :" + e);
-							}
-						}
-						data = null;
-					}
-					continue;
-				}
-
 			}
 		} catch (Exception e) {
 			System.out.println("ParserException : Comsumer " + e);

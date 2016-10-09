@@ -18,9 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.policy.stock.runner.finacedata.FinaceCwbbzyParseRunner;
 import com.policy.stock.runner.finacedata.FinaceDataStore;
 import com.policy.stock.runner.finacedata.FinaceParseRunner;
-import com.policy.stock.runner.finacedata.FinaceStoreRunner;
+import com.policy.stock.runner.finacedata.FinaceXjllbParseRunner;
+import com.policy.stock.runner.finacedata.FinaceZcfzbParseRunner;
 import com.policy.stock.runner.stockcoredata.StockCoreDataParseRunner;
 import com.policy.stock.runner.stockcoredata.StockCoreDataStore;
 import com.policy.stock.service.IFinaceDataService;
@@ -41,12 +43,46 @@ public class MainController {
     	List<String> codeList = this.getAllListedCode(basepath);
     	FinaceDataStore.getCodes().addAll(codeList);
     	FinaceParseRunner producer;
-    	FinaceStoreRunner consumer;
     	for(int i =0 ;i <1;i++){
     		producer = new FinaceParseRunner(finaceDataService);
     		producer.start();
     	}
-    	
+    }
+    
+    @RequestMapping(value = "/stock/triggerXjllb")
+    public void triggerXjllb(HttpServletRequest request, HttpServletResponse response) {
+        String basepath = request.getSession().getServletContext().getRealPath("/");
+        List<String> codeList = this.getAllListedCode(basepath);
+        FinaceDataStore.getCodes().addAll(codeList);
+        FinaceXjllbParseRunner producer;
+        for(int i =0 ;i <1;i++){
+            producer = new FinaceXjllbParseRunner(finaceDataService);
+            producer.start();
+        }
+    }
+    
+    @RequestMapping(value = "/stock/triggerZcfzb")
+    public void triggerZcfzb(HttpServletRequest request, HttpServletResponse response) {
+        String basepath = request.getSession().getServletContext().getRealPath("/");
+        List<String> codeList = this.getAllListedCode(basepath);
+        FinaceDataStore.getCodes().addAll(codeList);
+        FinaceZcfzbParseRunner producer;
+        for(int i =0 ;i <1;i++){
+            producer = new FinaceZcfzbParseRunner(finaceDataService);
+            producer.start();
+        }
+    }
+    
+    @RequestMapping(value = "/stock/triggerCwbbzy")
+    public void triggerCwbbzy(HttpServletRequest request, HttpServletResponse response) {
+        String basepath = request.getSession().getServletContext().getRealPath("/");
+        List<String> codeList = this.getAllListedCode(basepath);
+        FinaceDataStore.getCodes().addAll(codeList);
+        FinaceCwbbzyParseRunner producer;
+        for(int i =0 ;i <1;i++){
+            producer = new FinaceCwbbzyParseRunner(finaceDataService);
+            producer.start();
+        }
     }
     
     @RequestMapping(value = "/stock/coredata/trigger")
