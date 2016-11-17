@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class StockCoreDataStore {
 
-	private static LinkedBlockingQueue<String> codes = new LinkedBlockingQueue<String>(4000);
+    public static LinkedBlockingQueue<String> codes = new LinkedBlockingQueue<String>(4000);
 
 	public static LinkedBlockingQueue<String> getCodes() {
 		return codes;

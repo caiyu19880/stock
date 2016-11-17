@@ -6,9 +6,9 @@ import com.policy.stock.model.FinaceData;
 
 public class FinaceDataStore {
 	
-	private static LinkedBlockingQueue<FinaceData> finaceDatas = new LinkedBlockingQueue<FinaceData>(5000);
+    public static LinkedBlockingQueue<FinaceData> finaceDatas = new LinkedBlockingQueue<FinaceData>(5000);
 	
-	private static LinkedBlockingQueue<String> codes = new LinkedBlockingQueue<String>(4000);
+	public static LinkedBlockingQueue<String> codes = new LinkedBlockingQueue<String>(4000);
 
 	public static LinkedBlockingQueue<FinaceData> getFinaceDatas() {
 		return finaceDatas;

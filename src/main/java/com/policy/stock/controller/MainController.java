@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.policy.stock.runner.finacedata.AllFinaceDataParseRunner;
+import com.policy.stock.runner.finacedata.FinaceAllStockCodeParseRunner;
 import com.policy.stock.runner.finacedata.FinaceCwbbzyParseRunner;
 import com.policy.stock.runner.finacedata.FinaceDataStore;
 import com.policy.stock.runner.finacedata.FinaceParseRunner;
@@ -36,6 +38,18 @@ public class MainController {
     
     @Autowired
     private IStockCoreDataService stockCoreDataService;
+    
+    @RequestMapping(value = "/stock/allDataTrigger")
+    public void allDataTrigger(HttpServletRequest request, HttpServletResponse response) {
+        FinaceAllStockCodeParseRunner runner = new FinaceAllStockCodeParseRunner();
+        runner.run();
+        
+        AllFinaceDataParseRunner producer;
+        for(int i =0 ;i <2;i++){
+            producer = new AllFinaceDataParseRunner(finaceDataService);
+            producer.start();
+        }
+    }
     
     @RequestMapping(value = "/stock/trigger")
     public void trigger(HttpServletRequest request, HttpServletResponse response) {

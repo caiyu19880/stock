@@ -1,12 +1,12 @@
 package com.policy.stock;
 
-import com.policy.stock.runner.stockinfo.StockInfoParseRunner;
-import com.policy.stock.runner.stockinfo.StockInfoStoreRunner;
+import com.policy.stock.runner.finacedata.FinaceAllStockCodeParseRunner;
+import com.policy.stock.runner.stockinfo.StockCodePrintRunner;
 
 public class Main {
 
 	public static void main(String[] args) {
-		StockInfoParseRunner runner = new StockInfoParseRunner("sh600571");
+	    FinaceAllStockCodeParseRunner runner = new FinaceAllStockCodeParseRunner();
 		runner.run();
 //		StockInfoParseRunner runner1 = new StockInfoParseRunner("sh600662");
 //		runner1.run();
@@ -16,7 +16,10 @@ public class Main {
 //		StockInfoParseRunner runner3 = new StockInfoParseRunner("sh600129");
 //		runner3.run();
 //		
-		StockInfoStoreRunner consumer = new StockInfoStoreRunner();
+//		StockInfoStoreRunner consumer = new StockInfoStoreRunner();
+//		consumer.start();
+		
+		StockCodePrintRunner consumer = new StockCodePrintRunner();
 		consumer.start();
 		
 //		FinaceParseRunner runner = new FinaceParseRunner("000002");
